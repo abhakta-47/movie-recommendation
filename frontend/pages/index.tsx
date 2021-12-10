@@ -9,6 +9,16 @@ export default function Home() {
       <Head>
         <title>Machine Learning by abhakta47</title>
         <link rel="icon" href="/favicon.ico" />
+        {/* <meta charset="UTF-8"></meta> */}
+        <meta
+          name="description"
+          content="Movie recommendation using ML algos, by abhakta-47"
+        ></meta>
+        <meta
+          name="keywords"
+          content="ML, ReactJs, NextJs, Classfication, regression"
+        ></meta>
+        <meta name="author" content="abhakta-47"></meta>
       </Head>
 
       <div id="main-container">
@@ -134,7 +144,7 @@ let ResultMovies = ({ searchKey }) => {
               </div>
             );
           })
-        : "empty"}
+        : ""}
     </div>
   );
 };
