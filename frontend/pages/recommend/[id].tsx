@@ -1,7 +1,8 @@
 import Head from "next/head";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 
-export default function Home() {
+export default function Recommend() {
   let [searchKey, setSearchKey] = useState("");
 
   return (
@@ -22,8 +23,8 @@ export default function Home() {
       </Head>
 
       <div className="m-2">
-        <Search setSearchKey={setSearchKey} />
-        <ResultMovies searchKey={searchKey} />
+        <h1>Recommended movies :: </h1>
+        <RecommendedMovies />
       </div>
     </>
   );
@@ -31,61 +32,44 @@ export default function Home() {
 
 let apiKey = "00112194220384db1f4e36062ac14246";
 
-// import React from 'react'
-
-let Search = ({ setSearchKey }) => {
-  let [localSearchKey, setLocalSearchKey] = useState("");
-  const handleKeyDown = (event) => {
-    if (event.key === "Enter") {
-      setSearchKey(localSearchKey);
-    }
-  };
-  return (
-    <>
-      <div className="flex">
-        <input
-          onChange={(e) => setLocalSearchKey(e.target.value)}
-          onKeyDown={handleKeyDown}
-          className="p-2"
-          type="text"
-          name=""
-          id=""
-          placeholder="search movies"
-        />
-        <button
-          className="ms-2 px-2 bg-sky-500 text-white"
-          onClick={(e) => setSearchKey(localSearchKey)}
-        >
-          search
-        </button>
-      </div>
-    </>
-  );
-};
-
-let ResultMovies = ({ searchKey }) => {
-  let [movies, setMovies] = useState([{}]);
+let RecommendedMovies = () => {
+  let [movies, setMovies] = useState([]);
+  // console.log(url);
+  const router = useRouter();
+  const { id } = router.query;
+  const url = `http://localhost:5000/recommend/${id}`;
 
   useEffect(() => {
-    let url = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${searchKey}&page=1`;
+    if (!router.isReady) return;
     fetch(url)
       .then((res) => res.json())
       .then(
         (res) => {
-          // console.log(typeof res.results, JSON.parse(res.results));
-          setMovies(res.results);
+          // console.log("url", url);
+          // console.log("res", res);
+          if (res.status != 200) {
+            console.error("error: ", res.status);
+          }
+          Promise.all(
+            res.data.map((id) =>
+              fetch(
+                `https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}&language=en-US`
+              )
+                .then((res) => res.json())
+                .catch((err) => console.error(err))
+            )
+          ).then((data) => {
+            // console.log(data);
+            setMovies(data);
+          });
         },
-        (err) => console.error(err)
+        (err) => console.error("err", err)
       );
-  }, [searchKey]);
-
-  const handleGetRecommendation = (e) => {
-    // console.log(e.target.dataset.id);
-    window.location.href = `recommend/${e.target.dataset.id}`;
-  };
+  }, [router.isReady]);
 
   return (
     <div className="flex flex-wrap">
+      {/* test */}
       {movies
         ? movies.map((movie: any) => {
             // return <p>{movie.original_title}</p>;
@@ -120,15 +104,7 @@ let ResultMovies = ({ searchKey }) => {
                     </p>
                   </header>
 
-                  <footer className="flex items-center justify-between leading-none p-2 md:p-4">
-                    <button
-                      className="ms-2 px-5 py-3 bg-sky-500 text-white"
-                      data-id={movie.id}
-                      onClick={handleGetRecommendation}
-                    >
-                      Get recommendation
-                    </button>
-                  </footer>
+                  <footer className="flex items-center justify-between leading-none p-2 md:p-4"></footer>
                 </article>
               </div>
             );
