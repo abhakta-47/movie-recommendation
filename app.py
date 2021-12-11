@@ -1,5 +1,5 @@
 from flask import Flask, request, url_for, redirect, render_template, jsonify
-
+from flask_cors import CORS
 # ml imports
 from ml import Model
 
@@ -7,6 +7,7 @@ model = Model()
 
 # Initalise the Flask app
 app = Flask(__name__)
+CORS(app)
 
 
 @app.route('/')
