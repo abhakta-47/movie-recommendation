@@ -7,7 +7,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Machine Learning by abhakta47</title>
+        <title>Movie recommendation system</title>
         <link rel="icon" href="/favicon.ico" />
         {/* <meta charset="UTF-8"></meta> */}
         <meta
