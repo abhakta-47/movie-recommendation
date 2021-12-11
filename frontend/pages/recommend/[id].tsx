@@ -37,7 +37,7 @@ let RecommendedMovies = () => {
   // console.log(url);
   const router = useRouter();
   const { id } = router.query;
-  const url = `http://localhost:5000/recommend/${id}`;
+  const url = `https://movie-rec-sys-byab47.herokuapp.com/recommend/${id}`;
 
   useEffect(() => {
     if (!router.isReady) return;
