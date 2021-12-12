@@ -3,7 +3,7 @@ from flask_cors import CORS
 # ml imports
 from ml import Model, Model_content_v2
 
-model = Model()
+# model = Model()
 model_content_v2 = Model_content_v2()
 
 
@@ -19,8 +19,9 @@ def home():
 
 @app.route('/recommend/<id>')
 def content_basedv1(id):
-    result = model.new_data(id)
-    return jsonify(result)
+    # result = model.new_data(id)
+    # return jsonify(result)
+    result = {'status': 500, 'err': 'api endpoint turned off'}
 
 
 @app.route('/recommendv2/<id>')
