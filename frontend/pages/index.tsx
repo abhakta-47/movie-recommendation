@@ -42,7 +42,7 @@ let Search = ({ setSearchKey }) => {
   };
   return (
     <>
-      <div className="flex">
+      <div className="flex flex-wrap m-2">
         <input
           onChange={(e) => setLocalSearchKey(e.target.value)}
           onKeyDown={handleKeyDown}
@@ -64,16 +64,21 @@ let Search = ({ setSearchKey }) => {
 };
 
 let ResultMovies = ({ searchKey }) => {
+  let [status, setStatus] = useState("boot");
   let [movies, setMovies] = useState([{}]);
 
   useEffect(() => {
+    // console.log(searchKey);
+    if (searchKey === "") return;
     let url = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${searchKey}&page=1`;
+    setStatus("searching");
     fetch(url)
       .then((res) => res.json())
       .then(
         (res) => {
           // console.log(typeof res.results, JSON.parse(res.results));
           setMovies(res.results);
+          setStatus("ready");
         },
         (err) => console.error(err)
       );
@@ -84,11 +89,33 @@ let ResultMovies = ({ searchKey }) => {
     window.location.href = `recommend/${e.target.dataset.id}`;
   };
 
-  return (
-    <div className="flex flex-wrap">
-      {movies
-        ? movies.map((movie: any) => {
-            // return <p>{movie.original_title}</p>;
+  if (status == "boot") {
+    return (
+      <div className="flex align-center justify-center m-2 h-full">
+        <ol className="list-decimal list-inside">
+          <li>
+            use the search box to search for the movie, you want recommendation
+            for
+          </li>
+          <li>
+            get recommendation of the desired movie by pressing 'get
+            recommendation' button
+          </li>
+        </ol>
+      </div>
+    );
+  } else if (status == "searching") {
+    return (
+      <div className="flex align-center justify-center m-2 h-full">
+        <h1>Seaching</h1>
+      </div>
+    );
+  } else {
+    if (movies.length != 0) {
+      return (
+        <div className="flex flex-wrap">
+          {console.log("movies", movies.length)}
+          {movies.map((movie: any) => {
             return (
               <div
                 key={movie.id}
@@ -132,8 +159,11 @@ let ResultMovies = ({ searchKey }) => {
                 </article>
               </div>
             );
-          })
-        : ""}
-    </div>
-  );
+          })}
+        </div>
+      );
+    } else {
+      return <h1>No results</h1>;
+    }
+  }
 };
