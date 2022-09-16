@@ -85,7 +85,7 @@ class Model_content_v2:
         idx = 0 if new_data else self.indices[title]
         sim_scores = list(enumerate(cosine_sim[idx]))
         sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
-        sim_scores = sim_scores[1:6]
+        sim_scores = sim_scores[1:12]
         movie_indices = [i[0] for i in sim_scores]
         return self.movies_df.iloc[movie_indices]['id'].tolist()
 
